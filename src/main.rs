@@ -1,9 +1,19 @@
 use std::io;
+#[macro_use] extern crate lazy_static;
 use regex::Regex;
 
 fn first_line(line: &String) {
-    let re = Regex::new(r"(fix|feat|build|docs|chore)!?(\(.*?\))?: .+").unwrap();
-    assert!(re.is_match(line));
+    lazy_static! {
+        static ref RE : Regex = Regex::new(r"^(fix|feat|build|docs|chore)!?(\(.*?\))?: .+").unwrap();
+    }
+    assert!(RE.is_match(line));
+}
+
+fn last_line(line: &String) {
+    lazy_static! {
+        static ref RE : Regex = Regex::new(r".*").unwrap();
+    }
+    assert!(RE.is_match(line))
 }
 
 fn main() {
@@ -23,6 +33,7 @@ fn main() {
         }
         println!("Pipe output: {}", input);
         line_count += 1;
-        lastline = input;
+        lastline = input.clone();
     }
+    last_line(&lastline)
 }
